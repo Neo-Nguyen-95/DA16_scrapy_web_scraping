@@ -1,8 +1,9 @@
 #%% LIB
-from data import URLCrawl
+from data import URLCrawl, DataRepository
 import pandas as pd
 
 uc = URLCrawl()
+repo = DataRepository()
 
 #%% CRAWL URLS
 # url_list = [f"https://dantri.com.vn/tim-kiem/gi%C3%A1+v%C3%A0ng.htm?pi={index}"
@@ -12,12 +13,7 @@ uc = URLCrawl()
 # df.to_csv('database/url_collection.csv', encoding='utf-8-sig')
 
 #%% CRAWL CONTENT
-
-df = pd.read_csv("database/content.csv")
-df['content'] = df['content'].map(
-    lambda x: x.replace('Thông tin doanh nghiệp - sản phẩm', '')
-        )
-
-df = df.drop_duplicates()
-df.info()
+df = repo.load_documents()
 df.head()
+
+repo.export_ngram_list(num_gram=2, num_top=20)
