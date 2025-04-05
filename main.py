@@ -27,7 +27,7 @@ df.head()
 
 #%% EDA
     #%% 1. What are the most common words in the content?
-repo.export_ngram_list(num_gram=15, num_top=20)
+repo.export_ngram_list(num_gram=10, num_top=20)
 
     #%% 2. How frequent do they talk about the topic? Guess peak at new year
 df['month'] = pd.to_datetime(df['time']).dt.to_period("M")
@@ -47,12 +47,36 @@ plt.xticks(ticks=range(0, len(x_ticks), 6),
            label=x_ticks[::6],
            rotation=45
            )
+plt.xlabel(xlabel='Thời điểm đăng bài [Năm-tháng]')
+plt.ylabel('Số lượng bài viết')
+plt.title('Thống kê số lượng bài viết theo thời gian')
 plt.show()
 
-    #%% 3. Sentiment analysis
-df[df['sentiment']=='Yếu tố thị trường tài chính']['content'].iloc[0]
+# Which month has the most article?
+# df_frequency['month_num'] = pd.to_datetime(df_frequency['month']).dt.month
+# sns.boxplot(
+#     data=df_frequency[df_frequency['month']< pd.Timestamp(2024,1,1)], 
+#     y='month_num', x='count', orient='y')
+# plt.ylabel('Tháng')
+# plt.xlabel('Phân bố số bài viết')
+# plt.show()
 
-df['sentiment'].value_counts()
+    #%% 3. Sentiment analysis
+df[df['sentiment']=='Yếu tố kinh tế vĩ mô']['content'].iloc[0]
+df[df['sentiment']=='Yếu tố tiền tệ và tài chính']['content'].iloc[1]
+df[df['sentiment']=='Yếu tố địa chính trị và xã hội']['content'].iloc[0]
+df[df['sentiment']=='Yếu tố thị trường tài chính']['content'].iloc[1]
+
+ax = sns.barplot(
+    df['sentiment'].value_counts(), 
+    orient='y'
+    )
+ax.bar_label(ax.containers[0])
+plt.ylabel('Nguyên nhân chính ảnh hưởng tới giá vàng')
+plt.xlabel('Số bài viết')
+plt.xlim(0, 250)
+plt.show()
+
 
 
     #%% 4. Latent Dirichlet Allocation
@@ -77,8 +101,8 @@ sns.barplot(
     y=df_lda['topic_words'],
     orient='y'
     )
-plt.xlabel('Average proportion of topics [%]')
-plt.ylabel('Four most weighted words of the group')
+plt.xlabel('Tỉ lệ xuất hiện của mỗi chủ đề [%]')
+plt.ylabel('Bốn từ có tỉ trọng lớn nhất mỗi chủ đề')
 plt.show()
 
 
